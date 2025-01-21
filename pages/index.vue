@@ -18,5 +18,10 @@ definePageMeta({
 				お天気情報取得ページに遷移します
 			</NuxtLink>
 		</p>
+		<p>
+			<NuxtLink v-bind:to="{name: 'myJsonOpenMock'}">
+				とあるページに遷移します
+			</NuxtLink>
+		</p>
 	</section>
 </template>

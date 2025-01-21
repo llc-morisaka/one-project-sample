@@ -9,7 +9,7 @@ import { useUserStore } from '@/store/user';
 
 // Pinia ストアでユーザー情報とトークンをリセット
 const userStore = useUserStore();  // Piniaストアのインスタンス
-useUserStore.clearUser();
+userStore.clearUser();
 
 // ログイン画面に遷移
 await navigateTo("/login");

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { cities } from '@/data/city';
 import { useSelectedCityStore } from "@/store/SelectedCity";
+import { useUserStore } from '@/store/user';
 
 
 definePageMeta({
@@ -10,11 +11,32 @@ definePageMeta({
 
 
 const cityStore = useSelectedCityStore();
-const city = cityStore.city; // Pinia から都市情報を取得
+const city = cityStore.city; // Pinia から選択済みの都市情報を取得
 
-const onGetWeather = (): Promise<any> =>{
-  alert("まだ未実装");
+
+const userStore = useUserStore();
+const loginUser = userStore.user; // Piniaストアからユーザー情報を取得
+
+
+const viewFlg = ref(false); 
+
+
+const onGetWeather = async (): Promise<any> =>{
+  viewFlg.value = false;
+  if (city) {
+    viewFlg.value = true;
+    console.log("開きました");
+  } else {
+      alert("選択された都市が不明です");
+  }
 }
+
+const onCloseView = (): void =>{
+  viewFlg.value = false;
+}
+
+
+
 
 </script>
 
@@ -23,22 +45,34 @@ const onGetWeather = (): Promise<any> =>{
 		<ul>
 			<li><NuxtLink v-bind:to="{name: 'index'}">TOP</NuxtLink></li>
 			<li><NuxtLink v-bind:to="{name: 'weather-weatherShow'}">都市選択</NuxtLink></li>
-			<li>お天気情報</li>
+			<li>お天気情報取得</li>
 		</ul>
 	</nav>
 
   <section>
-    <h1>選択された都市のお天気</h1>
+    <h1>前のページであなた({{ loginUser?.name }})が選択した都市の情報</h1>
     <div v-if="city">
       <p><strong>ID:</strong> {{ city.id }}</p>
       <p><strong>名前:</strong> {{ city.name }}</p>
       <p><strong>クエリ:</strong> {{ city.q }}</p>
-      <button v-on:click="onGetWeather()">この都市のお天気を表示させます</button>
+      <div><button v-on:click="onGetWeather()">↑この都市のお天気を表示させます(まだエラーだよ)</button></div>
+      
+      <div><button v-if="viewFlg" v-on:click="onCloseView()">閉じる</button></div>
     </div>
     <div v-else>
       <p>都市が選択されていません。</p>
     </div>
   </section>
+
+
+
+<TheSelectedCityWeather
+  v-if="viewFlg && city"
+  v-bind:id="city.id"
+  v-bind:name="city.name"
+  v-bind:q="city.q"
+/>
+
 </template>
 
 <style scoped>

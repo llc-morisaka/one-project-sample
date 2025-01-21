@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { User } from "@/interfaces"
+import type { User, ReturnJSONAuth } from "@/interfaces"
 import { useUserStore } from '@/store/user';
 
 definePageMeta({
@@ -22,7 +22,7 @@ const onLoginButtonClick = async (): Promise<void> => {
   noServerError.value = true;
 
   // ログインデータのPOST送信
-  const asyncData = await useFetch(
+  const asyncData = await useFetch<ReturnJSONAuth>(
     "user-management/auth",
     {
       method: "POST",
@@ -32,6 +32,7 @@ const onLoginButtonClick = async (): Promise<void> => {
       }
     }
   );
+
 
   if(asyncData.error.value == null && asyncData.data.value != null && asyncData.data.value.result == 1) {
   // エンドポイント側の処理は成功
