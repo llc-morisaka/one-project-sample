@@ -2,6 +2,8 @@
 import { cities } from '@/data/city';
 import { useSelectedCityStore } from "@/store/SelectedCity";
 import { useUserStore } from '@/store/user';
+import { normalizeClass } from 'vue';
+import { useDateTime } from '~/composables/useDateTime';
 
 
 definePageMeta({
@@ -16,13 +18,16 @@ const city = cityStore.city; // Pinia から選択済みの都市情報を取得
 
 const userStore = useUserStore();
 const loginUser = userStore.user; // Piniaストアからユーザー情報を取得
-
-
+const nowTime = ref<string>("");
 const viewFlg = ref(false); 
 
 
 const onGetWeather = async (): Promise<any> =>{
   viewFlg.value = false;
+  nowTime.value = useDateTime().formatDateTime(false);
+
+
+
   if (city) {
     viewFlg.value = true;
     console.log("開きました");
@@ -55,9 +60,11 @@ const onCloseView = (): void =>{
       <p><strong>ID:</strong> {{ city.id }}</p>
       <p><strong>名前:</strong> {{ city.name }}</p>
       <p><strong>クエリ:</strong> {{ city.q }}</p>
-      <div><button v-on:click="onGetWeather()">↑この都市のお天気を表示させます(まだエラーだよ)</button></div>
-      
-      <div><button v-if="viewFlg" v-on:click="onCloseView()">閉じる</button></div>
+      <div><button v-on:click="onGetWeather()">↑この都市のお天気を表示させます</button></div>
+      <div v-if="viewFlg">
+        <div><button v-on:click="onCloseView()">閉じる</button></div>
+        <h2>あなたが取得した時間：{{ nowTime }}</h2>この日時を取得するメソッドを、どこでも流用できる「composables」に置いています。↑
+      </div>
     </div>
     <div v-else>
       <p>都市が選択されていません。</p>

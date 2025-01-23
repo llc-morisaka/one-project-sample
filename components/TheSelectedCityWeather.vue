@@ -26,14 +26,16 @@ const fetchData = async () => {
 
     // データを取得 (例として JSONPlaceholder API を使用)
     const res = await axios.get("https://api.openweathermap.org/data/2.5/weather", {
+
       headers: {
-        "Authorization": "token-here",
+//        "Authorization": "token-here",
         "Accept": "application/json"
       },
+
       params: {
         lang: "ja",
         q: selectCityQ.value,
-        appid: 1
+        appid: "ce3da5ab652987377b150687c3b87f54"
       }
     });
 
