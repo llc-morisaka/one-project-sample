@@ -35,7 +35,7 @@ const fetchData = async () => {
       params: {
         lang: "ja",
         q: selectCityQ.value,
-        appid: "ce3da5ab652987377b150687c3b87f54"
+        appid: ""
       }
     });
 
