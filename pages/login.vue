@@ -66,7 +66,7 @@ const onLoginButtonClick = async (): Promise<void> => {
 
 };
 </script>
-
+<!--
 <template>
   <h1>ログイン</h1>
   <p v-if="pending">ログイン中・・・</p>
@@ -85,10 +85,120 @@ const onLoginButtonClick = async (): Promise<void> => {
     </form>
   </template>
 </template>
+-->
+<template>
+  <div class="login-container">
+    <h1>ログイン</h1>
+    <div class="status">
+      <p v-if="pending" class="loading">ログイン中・・・</p>
+      <template v-else>
+
+        <p v-if="authFailed" class="err-msg">ログインIDまたはパスワードが違います</p>
+        <p v-if="noServerError" class="info-msg">IDとパスワードを入力してログインしてください</p>
+        <p v-else class="err-msg">サーバ処理中に障害が発生しました。もう一度ログインを行なってください</p>
+      
+      </template>
+    </div>
+    <form @submit.prevent="onLoginButtonClick" class="login-form">
+      <div class="form-group">
+        <label for="loginId">ID</label>
+        <input id="loginId" type="text" v-model="loginId" required>
+      </div>
+      <div class="form-group">
+        <label for="password">パスワード</label>
+        <input id="password" type="password" v-model="password" required>
+      </div>
+      <button type="submit" class="login-button">ログイン</button>
+    </form>
+  </div>
+</template>
+
 
 <style scoped>
-.errMsg {
-  color: #ff0000;
-  font-weight: 900;
+/* 全体のスタイリング */
+.login-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+/* ヘッダー */
+h1 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 状態メッセージ */
+.status {
+  margin-bottom: 20px;
+}
+
+.loading {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.info-msg {
+  color: #555;
+}
+
+.err-msg {
+  color: #d9534f;
+  font-weight: bold;
+}
+
+/* フォーム */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.form-group {
+  text-align: left;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.25);
+}
+
+/* ボタン */
+.login-button {
+  padding: 10px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #0056b3;
 }
 </style>

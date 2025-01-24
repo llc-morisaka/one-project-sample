@@ -46,51 +46,153 @@ const onCloseView = (): void =>{
 </script>
 
 <template>
-	<nav id="breadcrumbs">
-		<ul>
-			<li><NuxtLink v-bind:to="{name: 'index'}">TOP</NuxtLink></li>
-			<li><NuxtLink v-bind:to="{name: 'weather-weatherShow'}">都市選択</NuxtLink></li>
-			<li>お天気情報取得</li>
-		</ul>
-	</nav>
+  <div>
+    <nav id="breadcrumbs">
+      <ul>
+        <li><NuxtLink v-bind:to="{name: 'index'}">TOP</NuxtLink></li>
+        <li><NuxtLink v-bind:to="{name: 'weather-weatherShow'}">都市選択</NuxtLink></li>
+        <li>お天気情報取得</li>
+      </ul>
+    </nav>
 
-  <section>
-    <h1>前のページであなた({{ loginUser?.name }})が選択した都市の情報</h1>
-    <div v-if="city">
-      <p><strong>ID:</strong> {{ city.id }}</p>
-      <p><strong>名前:</strong> {{ city.name }}</p>
-      <p><strong>クエリ:</strong> {{ city.q }}</p>
-      <div><button v-on:click="onGetWeather()">↑この都市のお天気を表示させます</button></div>
-      <div v-if="viewFlg">
-        <div><button v-on:click="onCloseView()">閉じる</button></div>
-        <h2>あなたが取得した時間：{{ nowTime }}</h2>この日時を取得するメソッドを、どこでも流用できる「composables」に置いています。↑
+    <section>
+      <h1>前のページであなた({{ loginUser?.name }})が選択した都市の情報</h1>
+      <div v-if="city">
+        <p><strong>ID:</strong> {{ city.id }}</p>
+        <p><strong>名前:</strong> {{ city.name }}</p>
+        <p><strong>クエリ:</strong> {{ city.q }}</p>
+        <!-- ボタンを横並びにする -->
+        <div class="button-container">
+          <button v-on:click="onGetWeather()">↑この都市のお天気を表示させます</button>
+          <button v-if="viewFlg" v-on:click="onCloseView()">閉じる</button>
+        </div>
+        <div v-if="viewFlg">
+          <h2>あなたが取得した時間：{{ nowTime }}</h2>
+        </div>
       </div>
+      <div v-else>
+        <p>都市が選択されていません。</p>
+      </div>
+    </section>
+
+    <!-- TheSelectedCityWeather をラップして中央寄せ -->
+    <div v-if="viewFlg && city" class="the-selected-city-weather-wrapper">
+      <TheSelectedCityWeather
+        v-bind:id="city.id"
+        v-bind:name="city.name"
+        v-bind:q="city.q"
+      />
     </div>
-    <div v-else>
-      <p>都市が選択されていません。</p>
-    </div>
-  </section>
-
-
-
-<TheSelectedCityWeather
-  v-if="viewFlg && city"
-  v-bind:id="city.id"
-  v-bind:name="city.name"
-  v-bind:q="city.q"
-/>
-
+  </div>
 </template>
 
 <style scoped>
+/* 全体の背景とフォント設定 */
+body {
+  background-color: #f5f5f5; /* 柔らかい背景色 */
+  color: #333; /* 読みやすい文字色 */
+  font-family: 'Arial', sans-serif; /* クリーンなフォント */
+}
+
+/* パンくずリスト */
+#breadcrumbs ul {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+#breadcrumbs li {
+  margin-right: 8px;
+}
+
+#breadcrumbs li a {
+  text-decoration: none;
+  color: #007bff; /* リンクカラー */
+}
+
+#breadcrumbs li a:hover {
+  text-decoration: underline;
+}
+
+/* セクションスタイル */
+section {
+  background-color: #fff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 16px auto;
+  max-width: 750px;
+}
+
+/* 見出し */
 h1 {
-  font-size: 24px;
+  font-size: 26px;
   margin-bottom: 16px;
+  color: #444; /* 柔らかい色調 */
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 8px;
 }
 
+/* テキスト */
 p {
-  font-size: 18px;
+  font-size: 16px;
   margin: 8px 0;
+  line-height: 1.6;
 }
-</style>
 
+/* ボタン */
+button {
+  background-color: #007bff; /* 主なボタン色 */
+  color: #fff;
+  border: none;
+  padding: 10px 16px;
+  font-size: 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #0056b3; /* ホバーカラー */
+}
+
+button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+/* エラー時のスタイル */
+.error {
+  color: #d9534f; /* 赤色 */
+  font-weight: bold;
+}
+
+/* 天気情報の表示カード */
+.weather-card {
+  background-color: #e9f7fe; /* 青みがかった背景色 */
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #007bff;
+  margin-top: 16px;
+}
+
+
+/* ボタンを横並びにするスタイル */
+.button-container {
+  display: flex;
+  align-items: center; /* ボタンを垂直方向で中央揃え */
+  gap: 8px; /* ボタン間のスペース */
+  margin-top: 16px; /* 上に少し余白を追加 */
+}
+
+/* TheSelectedCityWeather を囲む要素をセンターに配置 */
+.the-selected-city-weather-wrapper {
+  display: flex;
+  justify-content: center; /* 水平方向に中央寄せ */
+  align-items: center; /* 垂直方向に中央寄せ */
+  margin-top: 16px; /* 上部に適度な余白 */
+  padding: 16px; /* 内側の余白 */
+}
+
+</style>

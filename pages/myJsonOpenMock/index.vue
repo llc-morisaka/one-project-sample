@@ -45,37 +45,110 @@ const onButtonClick = async (): Promise<void> => {
 </script>
 
 <template>
-  <h1>my-json-serverとgitHubを利用したAPIデータの取得</h1>
-  <p>12345~12349 までの数値を入れるとデータが帰ります</p>
-  <div>
-    <input type="text" v-model="id" name="id"/>
-  </div>
-  <p>{{ id }}の会員情報を<button v-on:click="onButtonClick()">検索</button></p>
+  <div class="api-container">
+    <h1>APIデータの取得</h1>
+    <p class="description">
+      12345~12349 の数値を入力してデータを検索してください。
+    </p>
 
+    <div class="input-container">
+      <input type="text" v-model="id" name="id" class="id-input" placeholder="IDを入力" />
+      <button class="search-button" v-on:click="onButtonClick()">検索</button>
+    </div>
 
-  <div>
-
-    <!-- ローディング中 -->
-    <div v-if="pending">データを取得中です...</div>
-
-    <!-- エラーメッセージ -->
-    <div v-else-if="errorMessage" class="error">{{ errorMessage }}</div>
-
-    <!-- データ表示 -->
-    <div v-else-if="data">
-      <h2>データ</h2>
-      <pre>{{ data }}</pre>
+    <div class="result-container">
+      <div v-if="pending" class="loading-message">データを取得中です...</div>
+      <div v-else-if="errorMessage" class="error-message">{{ errorMessage }}</div>
+      <div v-else-if="data" class="data-display">
+        <h2>取得したデータ</h2>
+        <pre>{{ data }}</pre>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
-.error {
+/* 全体のスタイル */
+.api-container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
+  text-align: center;
+}
+
+/* タイトル */
+.api-container h1 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+/* 説明文 */
+.description {
+  font-size: 1rem;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+/* 入力フォームのスタイル */
+.input-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.id-input {
+  width: 200px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+.search-button {
+  padding: 10px 16px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+  background-color: #0056b3;
+}
+
+/* 結果表示のスタイル */
+.result-container {
+  margin-top: 20px;
+  text-align: left;
+}
+
+.loading-message {
+  color: #007bff;
+  font-weight: bold;
+}
+
+.error-message {
   color: red;
   font-weight: bold;
 }
+
+.data-display {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Courier New', monospace;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
 </style>
-
-
-
-
