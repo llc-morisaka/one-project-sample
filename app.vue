@@ -1,3 +1,15 @@
+<script lang="ts" setup>
+const SITE_TITLE = "とあるサンプル";
+useHead({
+	titleTemplate: (titleChunk: string | undefined): string => {
+		let title = SITE_TITLE;
+		if (titleChunk != undefined) {
+			title = `${titleChunk} | ${SITE_TITLE}`;
+		}
+		return title;
+	}
+});
+</script>
 <template>
 	<NuxtLayout>
 		<NuxtPage/>

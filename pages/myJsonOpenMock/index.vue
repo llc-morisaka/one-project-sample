@@ -1,8 +1,20 @@
 <script setup lang="ts">
 import axios from 'axios';
 definePageMeta({
+  layout: "two-block",
   middleware: ["loggedin-check"]
 });
+
+const PAGE_TITLE = "MJSから情報取得";
+useHead({
+  title: PAGE_TITLE
+});
+
+const breadcrumbs = [
+  { text: 'TOP', link: 'index' },
+  { text: PAGE_TITLE },
+];
+
 
 
 const data = ref<any>(null);
@@ -45,7 +57,9 @@ const onButtonClick = async (): Promise<void> => {
 </script>
 
 <template>
-  <div class="api-container">
+    <Breadcrumbs :breadcrumbs="breadcrumbs" />
+
+    <div class="api-container">
     <h1>APIデータの取得</h1>
     <p class="description">
       12345~12349 の数値を入力してデータを検索してください。

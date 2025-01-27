@@ -38,17 +38,17 @@ definePageMeta({
 			<section class="navigation-links">
 				<p>
 					<NuxtLink :to="{ name: 'weather-weatherShow' }" class="link-button">
-						管理ページに遷移します
+						管理ページ
 					</NuxtLink>
 				</p>
 				<p>
 					<NuxtLink :to="{ name: 'weather-weatherShow' }" class="link-button">
-						お天気情報取得ページに遷移します
+						お天気情報取得ページ
 					</NuxtLink>
 				</p>
 				<p>
 					<NuxtLink :to="{ name: 'myJsonOpenMock' }" class="link-button">
-						とあるページに遷移します
+						MY JSON SERVERから情報取得ページ
 					</NuxtLink>
 				</p>
 			</section>

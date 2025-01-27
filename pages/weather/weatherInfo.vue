@@ -2,15 +2,18 @@
 import { cities } from '@/data/city';
 import { useSelectedCityStore } from "@/store/SelectedCity";
 import { useUserStore } from '@/store/user';
-import { normalizeClass } from 'vue';
 import { useDateTime } from '~/composables/useDateTime';
 
 
 definePageMeta({
-	layout: "weather",
+	layout: "two-block",
   middleware: ["loggedin-check"]
 });
 
+const PAGE_TITLE = "お天気情報取得";
+useHead({
+  title: PAGE_TITLE
+});
 
 const cityStore = useSelectedCityStore();
 const city = cityStore.city; // Pinia から選択済みの都市情報を取得
@@ -40,6 +43,11 @@ const onCloseView = (): void =>{
   viewFlg.value = false;
 }
 
+const breadcrumbs = [
+  { text: 'TOP', link: 'index' },
+  { text: '都市選択', link: 'weather-weatherShow' },
+  { text: PAGE_TITLE },
+];
 
 
 
@@ -47,6 +55,8 @@ const onCloseView = (): void =>{
 
 <template>
   <div>
+    <Breadcrumbs :breadcrumbs="breadcrumbs" />
+<!--
     <nav id="breadcrumbs">
       <ul>
         <li><NuxtLink v-bind:to="{name: 'index'}">TOP</NuxtLink></li>
@@ -54,7 +64,7 @@ const onCloseView = (): void =>{
         <li>お天気情報取得</li>
       </ul>
     </nav>
-
+  -->
     <section>
       <h1>前のページであなた({{ loginUser?.name }})が選択した都市の情報</h1>
       <div v-if="city">
@@ -63,7 +73,7 @@ const onCloseView = (): void =>{
         <p><strong>クエリ:</strong> {{ city.q }}</p>
         <!-- ボタンを横並びにする -->
         <div class="button-container">
-          <button v-on:click="onGetWeather()">↑この都市のお天気を表示させます</button>
+          <button v-on:click="onGetWeather()">この都市のお天気を表示させます</button>
           <button v-if="viewFlg" v-on:click="onCloseView()">閉じる</button>
         </div>
         <div v-if="viewFlg">
@@ -181,6 +191,7 @@ button:disabled {
 /* ボタンを横並びにするスタイル */
 .button-container {
   display: flex;
+  justify-content: center;
   align-items: center; /* ボタンを垂直方向で中央揃え */
   gap: 8px; /* ボタン間のスペース */
   margin-top: 16px; /* 上に少し余白を追加 */

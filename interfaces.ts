@@ -18,6 +18,21 @@ export interface City {
 }
 
 
+export interface Breadcrumb {
+  text: string;
+  link?: string;
+}
+
+export interface MenuItem {
+  name: string; // メニュー項目の名前
+  to?: string; // リンク先（オプション）
+  children?: MenuItem[]; // サブメニュー（オプション）
+}
+
+
+
+
+
 // 以下使ってない
 export interface Member {
   id: number;
