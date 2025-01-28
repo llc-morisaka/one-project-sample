@@ -3,6 +3,7 @@ export interface User {
   name: string;
   loginId: string;
   password: string;
+  authLebel: 1 | 2 | 3 | 9;
 }
 
 export interface ReturnJSONAuth {
@@ -29,6 +30,10 @@ export interface MenuItem {
   children?: MenuItem[]; // サブメニュー（オプション）
 }
 
+export interface ReturnJSONUsers {
+  result: number;
+  data: User[];
+}
 
 
 

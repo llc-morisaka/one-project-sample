@@ -2,32 +2,39 @@ import type { MenuItem } from "@/interfaces";
 
 export const menuData: MenuItem[] = [
   {
-    name: 'あああああ',
+    name: 'メニュー１',
     to: '/',
   },
   {
-    name: 'いいいいい',
+    name: 'メニュー２',
     to: '/weather/weatherShow',
   },
   {
-    name: 'ううううう',
+    name: 'メニュー３',
     to: '/about',
   },
   {
-    name: 'aaa',
+    name: 'メニュー４',
     children: [
-      { name: 'aaa_1', to: '/aaa_1' },
-      { name: 'aaa_2', to: '/aaa_2' },
+      { name: 'メニュー4のサブメニュー1', to: '/aaa_1' },
+      { name: 'メニュー4のサブメニュー2', to: '/aaa_2' },
     ],
   },
   {
-    name: 'ccc',
+    name: 'メニュー5',
     children: [
       {
-        name: 'ccc1',
+        name: 'メニュー5のサブメニュー1',
         children: [
-          { name: 'ccc1_1', to: '/ccc1_1' },
-          { name: 'ccc1_2', to: '/ccc1_2' },
+          { name: 'メニュー5のサブメニュー1のサブメニュー1', to: '/ccc1_1' },
+          { name: 'メニュー5のサブメニュー1のサブメニュー2', to: '/ccc1_2' },
+        ],
+      },
+      {
+        name: 'メニュー5のサブメニュー2',
+        children: [
+          { name: 'メニュー5のサブメニュー2のサブメニュー1', to: '/ccc1_1' },
+          { name: 'メニュー5のサブメニュー2のサブメニュー2', to: '/ccc1_2' },
         ],
       },
     ],

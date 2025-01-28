@@ -8,24 +8,21 @@ import { menuData } from '@/data/menuDataA';
       <h1 class="site-title">とあるサンプル</h1>
       <TheLoggedinSection />
     </header>
+
     <div class="content">
+
       <!-- 左側のメニュー -->
       <aside class="sidebar">
         <RecursiveMenu :menuItems="menuData" />        
-<!--        
-        <nav>
-          <ul>
-            <li><NuxtLink v-bind:to="{name: 'index'}">トップ</NuxtLink></li>
-          </ul>
-        </nav>
-      -->
       </aside>
+
       <!-- メインコンテンツ部分 -->
       <main class="main-content">
         <slot></slot>
       </main>
     </div>
-  </div>
+
+</div>
 </template>
 
 <style scoped>
@@ -57,6 +54,8 @@ import { menuData } from '@/data/menuDataA';
 .content {
   display: flex;
   flex: 1;
+  background-color: #f9f9f9;
+
 }
 
 /* サイドバー */
@@ -64,7 +63,8 @@ import { menuData } from '@/data/menuDataA';
   width: 250px;
   background-color: #f0f0f0;
   padding: 16px;
-  box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  margin-top: 60px;
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
 }
 
 .sidebar ul {

@@ -35,6 +35,13 @@ const props = defineProps<{
 </template>
 
 <style scoped>
+#breadcrumbs {
+  position: fixed;
+  left: 30px;
+  width: 100%;
+  top: 90px;
+}
+
 #breadcrumbs ul {
   display: flex;
   list-style: none;

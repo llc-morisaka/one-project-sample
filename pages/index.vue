@@ -37,7 +37,7 @@ definePageMeta({
 			</nav>
 			<section class="navigation-links">
 				<p>
-					<NuxtLink :to="{ name: 'weather-weatherShow' }" class="link-button">
+					<NuxtLink :to="{ name: 'user-userList' }" class="link-button">
 						管理ページ
 					</NuxtLink>
 				</p>

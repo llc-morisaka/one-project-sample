@@ -29,9 +29,6 @@ const noServerError = computed(
 	(): boolean => {
 		let resultVal = false;
 		
-		console.log("ああああasyncData",asyncData);
-		
-		
 		if(asyncData.error.value == null && responseData.value != null && responseData.value.result == 1) {
 			resultVal = true;
 		}
