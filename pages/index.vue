@@ -38,7 +38,7 @@ definePageMeta({
 			<section class="navigation-links">
 				<p>
 					<NuxtLink :to="{ name: 'user-userList' }" class="link-button">
-						管理ページ
+						利用者管理ページ
 					</NuxtLink>
 				</p>
 				<p>

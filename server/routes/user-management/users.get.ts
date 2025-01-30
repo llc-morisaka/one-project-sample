@@ -10,8 +10,14 @@ export default  defineEventHandler(
 
     //throw createError("擬似エラー発生１");
     try {
+
+console.log("users.get.ts動く");
       const storage = useStorage();
-      const userListStorage = await storage.getItem("local:user-management_users");
+      const userListStorage = await storage.getItem("local: user-management_users");
+
+
+console.log("userListStorage----", userListStorage);
+
       // throw createError("擬似エラー発生２");
       if(userListStorage != undefined) {
         userList = new Map<number, User>(userListStorage as any);

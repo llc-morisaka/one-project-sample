@@ -11,7 +11,10 @@ export default defineNuxtConfig({
   },
   modules: [
     '@pinia/nuxt'
-  ]
+  ],
+  // plugins: [
+  //  '~/plugins/initialize.ts',  // プラグインのパスを指定
+  //]
 
 });
 
