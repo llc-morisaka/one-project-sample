@@ -2,6 +2,8 @@
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
 import type { User } from "@/interfaces";
+import { useUserStore } from '@/store/user';
+
 
 // ページメタ設定
 definePageMeta({
@@ -21,7 +23,6 @@ const error = ref<Error | null>(null);
 const userList = computed((): User[] => {
   let returnList: User[] = [];
   if (responseData.value != null) {
-    console.log("あああああああ");
     returnList = responseData.value.data;
   }
   return returnList;
@@ -29,8 +30,6 @@ const userList = computed((): User[] => {
 
 
 const isEmptyList = computed((): boolean => {
-  console.log("おおおお");
-  
   return userList.value.length === 0;
 });
 
@@ -50,8 +49,6 @@ const fetchUserData = async () => {
     //const response = await axios.get("/user-management/users");
     const response = await axios.get("/user-management/users");
 
-console.log("response----", response.data);
-
     responseData.value = response.data; // サーバーからのデータを格納
 
     error.value = null; // エラーなし
@@ -63,12 +60,16 @@ console.log("response----", response.data);
 };
 
 
-
-
 const breadcrumbs = [
   { text: 'TOP', link: 'index' },
   { text: PAGE_TITLE },
 ];
+
+
+// Piniaストアからユーザー情報を取得
+const userStore = useUserStore();
+const loginUser = userStore.user;
+const loginUserId = loginUser?.loginId; 
 
 
 // 初期化時にデータを取得
@@ -80,14 +81,7 @@ onMounted(() => {
 <template>
 
   <Breadcrumbs :breadcrumbs="breadcrumbs" />
-<!--
-  <nav id="breadcrumbs">
-    <ul>
-      <li><NuxtLink :to="{ name: 'index' }">TOP</NuxtLink></li>
-      <li>ユーザリスト</li>
-    </ul>
-  </nav>
--->
+
   <section>
     <h2>利用者リスト</h2>
     <p>新規登録は<NuxtLink :to="{ name: 'user-userAdd' }">こちら</NuxtLink>から</p>
@@ -97,18 +91,18 @@ onMounted(() => {
       <section v-if="noServerError">
         <ul>
           <li v-if="isEmptyList">ユーザ情報は存在しません。</li>
-          <li
-            v-for="user in userList"
-            :key="user.id"
-          >
-            <NuxtLink
-              :to="{ name: 'user-userDetail-id', params: { id: user.id } }"
-            >
-              IDが{{ user.id }}の{{ user.name }}さん
-
-              
-            </NuxtLink>
+          
+          <li v-for="user in userList" :key="user.id">
+            <div v-if="user.loginId != loginUserId"> 
+              <NuxtLink :to="{ name: 'user-userDetail-id', params: { id: user.id } }">
+                {{user.id}} - ログインID : {{ user.loginId }}　{{ user.name }}
+              </NuxtLink>
+            </div>
+            <div v-else>
+              {{user.id}} - ログインID : {{ user.loginId }}　{{ user.name }}
+            </div>
           </li>
+
         </ul>
       </section>
       <p v-else>サーバからデータ取得中に障害が発生しました</p>
@@ -152,9 +146,19 @@ li {
   margin-bottom: 8px;
   border-radius: 5px;
   transition: transform 0.2s, box-shadow 0.2s;
+  overflow: hidden; 
+  position: relative;
+  z-index: 0;
 }
+/*
+li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+*/
 
 li:hover {
+  background: #e0e0e0; /* マウスオーバー時の背景色 */
   transform: translateY(-2px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }

@@ -1,5 +1,4 @@
 import type { User, ReturnJSONAuth } from "@/interfaces"
-import { users } from "../../data/users";
 
 export default defineEventHandler(
   async (event): Promise<ReturnJSONAuth> => {
@@ -7,11 +6,26 @@ export default defineEventHandler(
     let resultVal = 0;
     let tokenVal = "";
     let loginUser: User | null = null;
+    
+    let userListMap: any;
+
 
     try {
       const body = await readBody(event);
-      const user = users.find(u => u.loginId === body.loginId && u.password === body.password);
-      
+
+      const storage = useStorage();
+      const userListStorage = await storage.getItem("local: user-management_users");// この時点では配列
+
+      if(userListStorage != undefined) {
+        userListMap = new Map<number, User>(userListStorage as any);// 一旦マップにする
+
+      }
+
+      const userListIte = userListMap.values();// イテレータにする
+      const userListArray: User[] = Array.from(userListIte);// イテレータからまた配列にする
+
+      const user = userListArray.find(u => u.loginId === body.loginId && u.password === body.password);
+
       resultVal = 1;
       if (user) {
 
@@ -23,9 +37,12 @@ export default defineEventHandler(
           name: user.name,
           loginId: user.loginId,
           password: "",  // パスワードは不要
+          authLevel: user.authLevel
         };
       }
-    } catch (err) {
+
+
+    } catch(err) {
       console.log("失敗", err);
     }
 

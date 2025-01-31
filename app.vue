@@ -19,8 +19,8 @@ useHead({
 const user: User = {
 		id: 1,
 		name: "管理者太郎",
-		loginId: "admin",
-		password: "admin",
+		loginId: "llc",
+		password: "llc",
 		authLevel: 9
 };
 
