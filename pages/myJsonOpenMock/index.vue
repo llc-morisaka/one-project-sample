@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import axios from 'axios';
+import axios from "axios";
+import type { AxiosProgressEvent } from "axios"; 
+
 definePageMeta({
   layout: "two-block",
   middleware: ["loggedin-check"]
@@ -28,17 +30,24 @@ const errorMessage = ref<string | null>(null);
 
 const id = ref("12345"); // 初期値
 
+const progress = ref(0); // 進捗率 (0% ~ 100%)
+
 const onButtonClick = async (): Promise<void> => {
 
   try {
     pending.value = true; // ローディング開始
     errorMessage.value = null; // エラーメッセージのリセット
-
+    progress.value = 0; // 初期化
 
     const config = {
       headers: {
         'Authorization': 'token-token-token-token', // テキトーな認証トークン
         'Content-Type': 'application/json',       // コンテンツタイプ
+      },
+      onDownloadProgress: (progressEvent: AxiosProgressEvent) => {
+        if (progressEvent.total) {
+          progress.value = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+        }
       }
     };
     const response = await axios.get(`https://my-json-server.typicode.com/llc-morisaka/my-json/member/${id.value}`, config);
@@ -50,8 +59,52 @@ const onButtonClick = async (): Promise<void> => {
   } finally {
     pending.value = false; // ローディング終了
   }
-  
 };  
+
+
+
+
+const onButtonClick2 = async (): Promise<void> => {
+  try {
+    pending.value = true;
+    errorMessage.value = null;
+    progress.value = 0;
+    data.value = null;
+
+    const response = await axios.get("/samples/slows", {
+      responseType: "text", // ストリームレスポンスを受け取る
+      
+      onDownloadProgress: (event) => {
+        const receivedText = event.event?.target?.responseText;
+        if (!receivedText) return;
+
+        const parts = receivedText.split("\n").filter(Boolean);
+        parts.forEach((part: any) => {
+          try {
+            const dataChunk = JSON.parse(part);
+            if (dataChunk.progress !== undefined) {
+              progress.value = dataChunk.progress;
+            }
+            if (dataChunk.message) {
+              data.value = dataChunk;
+            }
+          } catch (error) {
+            console.warn("JSON パースエラー:", error);
+          }
+        });
+      },
+
+    });
+
+    console.log("最終レスポンス:", response.data);
+  } catch (error: any) {
+    errorMessage.value = error.message || "データ取得中にエラーが発生しました";
+  } finally {
+    pending.value = false;
+  }
+};
+
+
 
 
 </script>
@@ -68,10 +121,16 @@ const onButtonClick = async (): Promise<void> => {
     <div class="input-container">
       <input type="text" v-model="id" name="id" class="id-input" placeholder="IDを入力" />
       <button class="search-button" v-on:click="onButtonClick()">検索</button>
+      <button class="search-button" v-on:click="onButtonClick2()">遅延サンプル</button>
     </div>
 
     <div class="result-container">
       <div v-if="pending" class="loading-message">データを取得中です...</div>
+      
+      
+      <progress v-if="pending" :value="progress" max="100"></progress>
+
+
       <div v-else-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       <div v-else-if="data" class="data-display">
         <h2>取得したデータ</h2>
