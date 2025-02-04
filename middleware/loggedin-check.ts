@@ -5,7 +5,7 @@ import { useUserStore } from '@/store/user';
 
 export default defineNuxtRouteMiddleware(
   (to, from) => {
-
+/*
     // Piniaストアからユーザー情報を取得
     const userStore = useUserStore();
     const loginUser = userStore.user;
@@ -16,9 +16,10 @@ export default defineNuxtRouteMiddleware(
     } else {
       return;
     }
+*/
 
 
-/*
+    // クッキーからユーザー情報を取得
     const loginTokenCookie = useCookie<string | null>("loginToken");
     const loginUserCookie = useCookie<User | null>("loginUser");
     
@@ -27,6 +28,6 @@ export default defineNuxtRouteMiddleware(
     } else {
       return;
     }
-*/
+
   }
 );

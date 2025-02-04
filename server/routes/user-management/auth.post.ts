@@ -43,7 +43,12 @@ export default defineEventHandler(
 
 
     } catch(err) {
-      console.log("失敗", err);
+      console.error("失敗", err);
+      throw createError({
+        statusCode: 500,
+        statusMessage: "サーバーエラーが発生しました",
+        data: { error: err }
+      });
     }
 
     return {

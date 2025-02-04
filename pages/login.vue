@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { User, ReturnJSONAuth } from "@/interfaces"
 import { useUserStore } from '@/store/user';
+import axios from "axios";
 
 definePageMeta({
   layout: "loggedout"
@@ -15,6 +16,8 @@ const noServerError = ref(true);
 const authFailed = ref(false);
 const userStore = useUserStore();  // Piniaストアのインスタンス
 
+const error = ref<string | null>(null);
+const response = ref<any>(null);
 
 const onLoginButtonClick = async (): Promise<void> => {
   pending.value = true;
@@ -32,23 +35,76 @@ const onLoginButtonClick = async (): Promise<void> => {
       }
     }
   );
+};
+
+const onLoginButtonClick2 = async (): Promise<void> => {
+  error.value = null; // エラーを初期化
+  try {
+    const res = await axios.post('user-management/auth', {
+      loginId: loginId.value,
+      password: password.value
+    });
+
+    // レスポンスデータを取得
+    response.value = res.data;
+
+    if (response.value && response.value.result === 1) {
+    // エンドポイント側の処理は成功
+
+      if (response.value.token != "" && response.value.user != null) {
+        // 認証が通った
+
+        // Piniaストアにユーザー情報とトークンを保存する場合
+        // userStore.setUser(asyncData.data.value.user, asyncData.data.value.token);
+
+        // ユーザ情報をクッキーに格納する場合
+        const loginUserCookie = useCookie<User | null>("loginUser");
+        loginUserCookie.value = response.value.user;
+        // アクセストークン文字列をクッキーに格納
+        const loginTokenCookie = useCookie<string | null>("loginToken");
+        loginTokenCookie.value = response.value.token;
+
+        await navigateTo("/");
+
+      } else {
+        // 認証が通らなかった
+        // トークンなしやユーザ情報が空っぽ
+        pending.value = false;
+        authFailed.value = true;
+      }
 
 
+    } else {
+      // 認証が通らなかった
+      // そもそもレスポンスデータが無いとか、レスポンスデータはあるけど結果が「1」以外
+      pending.value = false;
+      authFailed.value = true;
+      error.value = 'ログインに失敗しました';
+    }
+  } catch (err: any) {
+    // 通信エラーやサーバーエラーの場合
+    error.value = err.response?.data?.message || '通信エラーが発生しました';
+    console.error('エラー:', error.value);
+  }
+};
+
+
+/*
   if(asyncData.error.value == null && asyncData.data.value != null && asyncData.data.value.result == 1) {
   // エンドポイント側の処理は成功
     
     if (asyncData.data.value.token != "" && asyncData.data.value.user != null) {
     // 認証が通った
 
-      // Piniaストアにユーザー情報とトークンを保存
+      // Piniaストアにユーザー情報とトークンを保存する場合
       userStore.setUser(asyncData.data.value.user, asyncData.data.value.token);
 
-      // ユーザ情報をクッキーに格納
-      //const loginUserCookie = useCookie<User | null>("loginUser");
-      //loginUserCookie.value=asyncData.data.value.user;
+      // ユーザ情報をクッキーに格納する場合
+      // const loginUserCookie = useCookie<User | null>("loginUser");
+      // loginUserCookie.value = asyncData.data.value.user;
       // アクセストークン文字列をクッキーに格納
-      //const loginTokenCookie = useCookie<string | null>("loginToken");
-      //loginTokenCookie.value = asyncData.data.value.token;
+      // const loginTokenCookie = useCookie<string | null>("loginToken");
+      // loginTokenCookie.value = asyncData.data.value.token;
 
       await navigateTo("/");
 
@@ -62,9 +118,13 @@ const onLoginButtonClick = async (): Promise<void> => {
   // エンドポイント側の処理が失敗
     pending.value = false;
     noServerError.value = false;
-  }
+    if (asyncData.error.value) {
+      console.error("サーバーエラー:", asyncData.error.value);
+    }
 
-};
+  }
+*/
+
 </script>
 <!--
 <template>
@@ -99,7 +159,7 @@ const onLoginButtonClick = async (): Promise<void> => {
       
       </template>
     </div>
-    <form @submit.prevent="onLoginButtonClick" class="login-form">
+    <form @submit.prevent="onLoginButtonClick2" class="login-form">
       <div class="form-group">
         <label for="loginId">ID</label>
         <input id="loginId" type="text" v-model="loginId" required>

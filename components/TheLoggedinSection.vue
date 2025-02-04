@@ -1,14 +1,21 @@
 <script setup lang="ts">
-import { useUserStore } from '@/store/user';
+// import { useUserStore } from '@/store/user';
+import type { User } from '@/interfaces';
+
 
 // Piniaストアからユーザー情報を取得
-const userStore = useUserStore();
-const loginUser = userStore.user;
+// const userStore = useUserStore();
+// const loginUser = userStore.user;
+
+// クッキーからユーザー情報を取得
+//const loginTokenCookie = useCookie<string | null>("loginToken");
+const loginUser = useCookie<User | null>("loginUser");
+
 
 if (loginUser) {
   console.log("loginUser", loginUser);
 } else {
-  console.log("Piniaで取得できず");
+  console.log("cookieで取得できず");
 }
 </script>
 

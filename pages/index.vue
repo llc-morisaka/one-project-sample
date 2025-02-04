@@ -51,6 +51,11 @@ definePageMeta({
 						MY JSON SERVERから情報取得ページ
 					</NuxtLink>
 				</p>
+				<p>
+					<NuxtLink :to="{ name: 'samplePdf' }" class="link-button">
+						サンプルPDF表示
+					</NuxtLink>
+				</p>
 			</section>
 		</div>
 	</div>
