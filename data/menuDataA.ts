@@ -2,8 +2,8 @@ import type { MenuItem } from "@/interfaces";
 
 export const menuData: MenuItem[] = [
   {
-    name: 'メニュー１',
-    to: '/',
+    name: 'タブのあるページ',
+    to: '/sampleTab',
   },
   {
     name: 'メニュー２',

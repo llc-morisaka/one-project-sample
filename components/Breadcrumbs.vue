@@ -36,8 +36,8 @@ const props = defineProps<{
 
 <style scoped>
 #breadcrumbs {
-  position: fixed;
-  left: 30px;
+  position: absolute;
+  left: 20px;
   width: 100%;
   top: 90px;
 }

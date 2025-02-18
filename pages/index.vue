@@ -56,6 +56,11 @@ definePageMeta({
 						サンプルPDF表示
 					</NuxtLink>
 				</p>
+				<p>
+					<NuxtLink :to="{ name: 'sampleTemp' }" class="link-button">
+						テキストエリアコンポーネントサンプル
+					</NuxtLink>
+				</p>
 			</section>
 		</div>
 	</div>

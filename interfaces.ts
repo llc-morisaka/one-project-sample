@@ -35,6 +35,32 @@ export interface ReturnJSONUsers {
   data: User[];
 }
 
+export interface InputArea {
+  cardTitle?: string;
+  cardText?: string;
+  sectionId: string;
+  initialText: string;
+  useFlg: boolean;
+}
+
+
+export interface SendJSONVcard {
+  textAreaVal: string,
+  sectionId: string,
+  generatedFileName: string
+}
+
+
+
+export interface ReturnJSONVcard {
+  result?: number;
+  prompt: string,
+  sectionId: string,
+  generatedFileName: string
+}
+
+
+
 
 
 

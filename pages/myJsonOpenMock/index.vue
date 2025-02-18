@@ -26,9 +26,11 @@ const noServerError = ref(true);
 const authFailed = ref(false);
 
 // エラーメッセージを格納する変数
+const isLoading = ref(false); // 読み込み中フラグ（すべての処理で共通）
+const isModalOpen = ref(false); // モーダルの開閉状態（onButtonClick3専用）
 const errorMessage = ref<string | null>(null);
-
 const id = ref("12345"); // 初期値
+
 
 const progress = ref(0); // 進捗率 (0% ~ 100%)
 
@@ -66,14 +68,13 @@ const onButtonClick = async (): Promise<void> => {
 
 const onButtonClick2 = async (): Promise<void> => {
   try {
-    pending.value = true;
+    isLoading.value = true;
     errorMessage.value = null;
     progress.value = 0;
     data.value = null;
 
     const response = await axios.get("/samples/slows", {
-      responseType: "text", // ストリームレスポンスを受け取る
-      
+      responseType: "text", 
       onDownloadProgress: (event) => {
         const receivedText = event.event?.target?.responseText;
         if (!receivedText) return;
@@ -93,26 +94,61 @@ const onButtonClick2 = async (): Promise<void> => {
           }
         });
       },
-
     });
 
     console.log("最終レスポンス:", response.data);
   } catch (error: any) {
     errorMessage.value = error.message || "データ取得中にエラーが発生しました";
   } finally {
-    pending.value = false;
+    isLoading.value = false;
   }
 };
 
+const onButtonClick3 = async (): Promise<void> => {
+  try {
+    isLoading.value = true;
+    isModalOpen.value = true; // モーダルを開く
+    errorMessage.value = null;
+    progress.value = 0;
+    data.value = null;
 
+    const response = await axios.get("/samples/slows", {
+      responseType: "text", 
+      onDownloadProgress: (event) => {
+        const receivedText = event.event?.target?.responseText;
+        if (!receivedText) return;
 
+        const parts = receivedText.split("\n").filter(Boolean);
+        parts.forEach((part: any) => {
+          try {
+            const dataChunk = JSON.parse(part);
+            if (dataChunk.progress !== undefined) {
+              progress.value = dataChunk.progress;
+            }
+            if (dataChunk.message) {
+              data.value = dataChunk;
+            }
+          } catch (error) {
+            console.warn("JSON パースエラー:", error);
+          }
+        });
+      },
+    });
 
+    console.log("最終レスポンス:", response.data);
+  } catch (error: any) {
+    errorMessage.value = error.message || "データ取得中にエラーが発生しました";
+  } finally {
+    isLoading.value = false;
+    isModalOpen.value = false; // 処理完了後にモーダルを閉じる
+  }
+};
 </script>
 
 <template>
-    <Breadcrumbs :breadcrumbs="breadcrumbs" />
+  <Breadcrumbs :breadcrumbs="breadcrumbs" />
 
-    <div class="api-container">
+  <div class="api-container">
     <h1>APIデータの取得</h1>
     <p class="description">
       12345~12349 の数値を入力してデータを検索してください。
@@ -120,16 +156,19 @@ const onButtonClick2 = async (): Promise<void> => {
 
     <div class="input-container">
       <input type="text" v-model="id" name="id" class="id-input" placeholder="IDを入力" />
-      <button class="search-button" v-on:click="onButtonClick()">検索</button>
-      <button class="search-button" v-on:click="onButtonClick2()">遅延サンプル</button>
+      <button class="search-button" @click="onButtonClick2()" :disabled="isLoading">
+        プログレスバーサンプル
+      </button>
+      <button class="search-button" @click="onButtonClick3()" :disabled="isLoading">
+        モーダルサンプル
+      </button>
     </div>
 
     <div class="result-container">
-      <div v-if="pending" class="loading-message">データを取得中です...</div>
+      <div v-if="isLoading" class="loading-message">データを取得中です...</div>
       
-      
-      <progress v-if="pending" :value="progress" max="100"></progress>
-
+      <!-- 🔹 プログレスバー (onButtonClick2() の時はこのまま表示) -->
+      <progress v-if="isLoading && !isModalOpen" :value="progress" max="100"></progress>
 
       <div v-else-if="errorMessage" class="error-message">{{ errorMessage }}</div>
       <div v-else-if="data" class="data-display">
@@ -138,12 +177,20 @@ const onButtonClick2 = async (): Promise<void> => {
       </div>
     </div>
   </div>
+
+  <!-- 🔹 モーダル (onButtonClick3() の時だけ表示) -->
+  <div v-if="isModalOpen" class="modal-overlay">
+    <div class="modal-content">
+      <h2>データ取得中...</h2>
+      <progress :value="progress" max="100"></progress>
+    </div>
+  </div>
 </template>
 
 <style scoped>
 /* 全体のスタイル */
 .api-container {
-  max-width: 600px;
+  max-width: 800px;
   margin: 40px auto;
   padding: 20px;
   background-color: #ffffff;
@@ -223,5 +270,38 @@ const onButtonClick2 = async (): Promise<void> => {
   font-family: 'Courier New', monospace;
   white-space: pre-wrap;
   word-break: break-word;
+}
+
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+}
+.close-button {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  background-color: #0056b3;
 }
 </style>
