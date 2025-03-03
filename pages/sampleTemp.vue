@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import { inputAreas } from '@/data/inputAreas';
+import axios from 'axios';
+import type { ReturnJSONVcard } from "@/interfaces";
 
 definePageMeta({
 	layout: "two-block",
@@ -16,6 +18,59 @@ const breadcrumbs = [
   { text: 'TOP', link: 'index' },
   { text: PAGE_TITLE },
 ];
+
+
+const responseData = ref<ReturnJSONVcard>({
+  result: 0,
+  prompt: '',
+  sectionId: '',
+  generatedFileName: ''
+});
+
+
+
+const allView = async (): Promise<void> => {
+  alert("再生成します----");
+/*  
+  try {
+    const response = await axios.post('/samples/vcard',
+    {
+      textAreaVal: "aaaaaa",
+      sectionId: "bbbbbbb",
+      generatedFileName: "cccccc"
+    },
+    {
+      headers: {
+        "Accept": "application/json"
+      },
+    });
+
+    console.log('返ってきた値群:', response.data)
+    responseData.value = response.data;
+
+  } catch (error: any) {
+    if (error.response) {
+    // サーバーがステータスコードでエラーを返した場合
+      console.error('Server responded with status code:', error.response.status);
+      console.error('Response data:', error.response.data);
+    } else if (error.request) {
+    // リクエストが送信されたが、レスポンスがない場合
+      console.error('No response received:', error.request);
+    } else {
+    // リクエストの設定中にエラーが発生した場合
+    console.error('Error setting up request:', error.message);
+    }
+  } finally {
+  //　成否に関わらず必ずやる処理があればココ
+
+  }
+*/
+};
+
+const resetAll = () => {
+  alert("stab");
+}
+
 
 </script>
 
@@ -35,8 +90,16 @@ const breadcrumbs = [
         :initialText="vcard.initialText"
       />
     </div>
+    <div class="allData">
+
+    </div>
+    <!-- ボタン -->
+    <div class="button-group">
+      <button class="btn btn-recreate" @click="allView()">全部の入力を表示</button>
+      <button class="btn btn-reset" @click="resetAll()">一括リセット</button>
+    </div>
   </div>
-  
+
 </template>
 
 <style scoped>

@@ -12,10 +12,12 @@ export default defineNuxtConfig({
   modules: [
     '@pinia/nuxt'
   ],
-  // plugins: [
-  //  '~/plugins/initialize.ts',  // プラグインのパスを指定
+  //plugins: [
+    //'~/plugins/initialize.ts',  // プラグインのパスを指定
   //]
-
+  //build: {
+  //  transpile: ['quill', '@vueup/vue-quill', 'quill-delta']
+  // }
 });
 
 

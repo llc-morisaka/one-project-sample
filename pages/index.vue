@@ -61,6 +61,16 @@ definePageMeta({
 						テキストエリアコンポーネントサンプル
 					</NuxtLink>
 				</p>
+				<p>
+					<NuxtLink :to="{ name: 'sampleEditableArea' }" class="link-button">
+						エディタブルエリアサンプル
+					</NuxtLink>
+				</p>
+				<p>
+					<NuxtLink :to="{ name: 'sampleRichTextEditor' }" class="link-button">
+						リッチテキストエディタサンプル
+					</NuxtLink>
+				</p>
 			</section>
 		</div>
 	</div>
