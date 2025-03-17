@@ -31,7 +31,7 @@ const highlightText = (input: string): string => {
   const regex = new RegExp(`\\b(${emphasisWord.join("|")})\\b`, "g");
 
   console.log("regex---", regex);
-  return input.replace(regex, '<span class="highlight" contenteditable="false">$1</span>');
+  return input.replace(regex, '<span class="highlight">$1</span>');
 };
 
 

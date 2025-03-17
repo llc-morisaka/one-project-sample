@@ -45,7 +45,11 @@ const plainTextContent = computed(() => {
       v-model="content"
       api-key="dlep74w28pkncgvrdo442lepms4s41xau00vjr41djsmux8i"
       :init="{
-        toolbar_mode: 'sliding',
+      browser_spellcheck: false,
+      forced_root_block: 'div',
+      force_br_newlines: false,
+      force_p_newlines: false,
+      toolbar_mode: 'sliding',
         plugins: [
           'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
           'checklist', 'mediaembed', 'casechange', 'export', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'

@@ -67,8 +67,18 @@ definePageMeta({
 					</NuxtLink>
 				</p>
 				<p>
+					<NuxtLink :to="{ name: 'sampleEditableAreaOps' }" class="link-button">
+						エディタブルエリアoptionsAPIバージョンサンプル
+					</NuxtLink>
+				</p>
+				<p>
 					<NuxtLink :to="{ name: 'sampleRichTextEditor' }" class="link-button">
 						リッチテキストエディタサンプル
+					</NuxtLink>
+				</p>
+				<p>
+					<NuxtLink :to="{ name: 'sampleDirUpload' }" class="link-button">
+						フォルダアップロードサンプル
 					</NuxtLink>
 				</p>
 			</section>
